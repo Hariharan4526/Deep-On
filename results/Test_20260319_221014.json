@@ -1,0 +1,20 @@
+{
+  "video_path": ".\\Test.mp4",
+  "classification": "Deepfake",
+  "confidence": 0.26,
+  "probability": 0.5013,
+  "pathway_scores": {
+    "cnn": 0.4979,
+    "optical_flow": 0.0824,
+    "frequency": 0.7838,
+    "landmarks": 0.425
+  },
+  "processing_time_s": 14.39,
+  "frames_processed": 39,
+  "fps": 2.71,
+  "timestamp": "20260319_221014",
+  "visualizations": {
+    "temporal": "results/visualizations\\Test_temporal.png",
+    "radar": "results/visualizations\\Test_radar.png"
+  }
+}

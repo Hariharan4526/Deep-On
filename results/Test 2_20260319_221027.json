@@ -1,0 +1,20 @@
+{
+  "video_path": ".\\Test 2.mp4",
+  "classification": "Authentic",
+  "confidence": 6.53,
+  "probability": 0.4673,
+  "pathway_scores": {
+    "cnn": 0.4941,
+    "optical_flow": 0.389,
+    "frequency": 0.7479,
+    "landmarks": 0.425
+  },
+  "processing_time_s": 7.6,
+  "frames_processed": 23,
+  "fps": 3.03,
+  "timestamp": "20260319_221027",
+  "visualizations": {
+    "temporal": "results/visualizations\\Test 2_temporal.png",
+    "radar": "results/visualizations\\Test 2_radar.png"
+  }
+}

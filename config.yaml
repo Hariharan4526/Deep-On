@@ -1,0 +1,45 @@
+model:
+  cnn_model: efficientnet_b4
+  pretrained: true
+  feature_dim: 1024
+  weights_dir: models/weights
+
+paths:
+  raw_videos: data/raw_videos
+  processed: data/processed
+  datasets: data/datasets
+  predictions: results/predictions
+  visualizations: results/visualizations
+  metrics: results/metrics
+
+detection:
+  face_confidence_threshold: 0.95
+  face_size_min: 50
+  face_size_max: 500
+  target_face_size: 256
+  frame_skip: 5
+
+ensemble:
+  weights:
+    cnn: 0.50
+    optical_flow: 0.15
+    frequency: 0.25
+    landmarks: 0.10
+  temperature: 1.2
+  temporal_alpha: 0.7
+  classification_threshold: 0.5
+
+normalization:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+
+hardware:
+  device: cuda
+  batch_size: 8
+  num_workers: 4
+
+output:
+  save_gradcam: true
+  save_attention: true
+  save_report: true
+  report_format: json
