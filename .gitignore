@@ -1,0 +1,7 @@
+# User-requested ignores
+Documents/
+env/
+
+# Test artifacts/files
+Test*.mp4
+
