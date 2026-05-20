@@ -4,4 +4,23 @@ env/
 
 # Test artifacts/files
 Test*.mp4
+results/
+results/visualizations/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Virtual environment folders
+venv/
+.env
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
 
