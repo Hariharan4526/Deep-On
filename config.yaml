@@ -18,16 +18,47 @@ detection:
   face_size_max: 500
   target_face_size: 256
   frame_skip: 5
+  # ENHANCEMENT: Adaptive frame processing
+  adaptive_frame_processing: true
+  blur_threshold: 50.0
+  duplicate_threshold: 0.95
+  motion_threshold: 0.05
+  min_frame_interval: 2
 
 ensemble:
   weights:
-    cnn: 0.50
+    cnn: 0.40          # Reduced from 0.50
     optical_flow: 0.15
-    frequency: 0.25
+    frequency: 0.15    # Reduced from 0.25
     landmarks: 0.10
+    temporal: 0.10     # NEW: Temporal consistency
+    forensic: 0.10     # NEW: Forensic analysis
   temperature: 1.2
   temporal_alpha: 0.7
   classification_threshold: 0.5
+
+# ENHANCEMENT: Temporal Analysis
+temporal:
+  enabled: true
+  use_lstm: true
+  lstm_hidden_size: 32
+  lstm_num_layers: 2
+  sequence_length: 32
+
+# ENHANCEMENT: Forensic Analysis
+forensic:
+  enabled: true
+  gan_sensitivity: 0.5
+  boundary_sensitivity: 0.6
+  texture_sensitivity: 0.4
+  compression_sensitivity: 0.5
+
+# ENHANCEMENT: Robustness (Training & Inference)
+robustness:
+  enabled: true
+  test_time_augmentation: true
+  tta_num_augmentations: 4  # 1-8
+  training_augmentation: true
 
 normalization:
   mean: [0.485, 0.456, 0.406]
@@ -37,9 +68,37 @@ hardware:
   device: cuda
   batch_size: 8
   num_workers: 4
+  # ENHANCEMENT: Batch inference optimization
+  use_batch_inference: true
+  max_batch_size: 32
+  mixed_precision: false  # Enable for faster inference
 
 output:
   save_gradcam: true
   save_attention: true
   save_report: true
   report_format: json
+  # ENHANCEMENT: Enhanced output
+  save_confidence_timeline: true
+  save_suspicious_frames: true
+  save_forensic_report: true
+  save_temporal_analysis: true
+
+# ENHANCEMENT: Training improvements
+training:
+  mixed_dataset: true
+  class_balancing: true
+  early_stopping: true
+  early_stopping_patience: 5
+  learning_rate_schedule: true
+  initial_learning_rate: 0.001
+  lr_decay_factor: 0.1
+  lr_decay_steps: 10
+  validation_metrics: true
+
+# ENHANCEMENT: Evaluation
+evaluation:
+  compute_roc_auc: true
+  compute_f1_score: true
+  compute_confusion_matrix: true
+  analyze_false_positives: true

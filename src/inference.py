@@ -1,7 +1,13 @@
 """Full end-to-end deepfake detection inference pipeline.
 
-Ties together all 8 modules (MOD-01 → MOD-08) into a single
+Ties together all 8 modules (MOD-01 → MOD-08) + ENHANCEMENTS into a single
 DeepfakeDetector class that processes one video at a time or a batch.
+
+ENHANCEMENTS:
+  - Adaptive frame processing (blur/duplicate detection, motion sensitivity)
+  - Temporal analysis (LSTM-based motion consistency)
+  - Forensic analysis (GAN artifacts, compression anomalies)
+  - Robustness (test-time augmentation, training improvements)
 """
 import os
 import time
@@ -10,22 +16,27 @@ from typing import Dict, List, Optional
 import cv2
 import numpy as np
 
-from .video_handler       import VideoHandler
-from .face_detection      import FaceDetector
-from .cnn_extractor       import CNNExtractor
-from .optical_flow        import OpticalFlowAnalyzer
-from .frequency_analyzer  import FrequencyAnalyzer
-from .landmark_validator  import LandmarkValidator
-from .ensemble_classifier import EnsembleClassifier
-from .visualization       import VisualizationModule
-from .config              import Config, load_config
-from .utils               import setup_logger, ensure_dirs, normalize_image
+from .video_handler           import VideoHandler
+from .face_detection          import FaceDetector
+from .cnn_extractor           import CNNExtractor
+from .optical_flow            import OpticalFlowAnalyzer
+from .frequency_analyzer      import FrequencyAnalyzer
+from .landmark_validator      import LandmarkValidator
+from .ensemble_classifier     import EnsembleClassifier
+from .visualization           import VisualizationModule
+from .config                  import Config, load_config
+from .utils                   import setup_logger, ensure_dirs, normalize_image
+# ENHANCEMENTS
+from .adaptive_frame_processor import AdaptiveFrameProcessor
+from .temporal_analyzer        import TemporalAnalyzer
+from .forensic_analyzer        import ForensicAnalyzer
+from .robustness_augmentation  import RobustnessAugmentation
 
 logger = setup_logger(__name__)
 
 
 class DeepfakeDetector:
-    """Full multi-modal deepfake detection pipeline."""
+    """Full multi-modal deepfake detection pipeline with enhancements."""
 
     def __init__(
         self,
@@ -40,6 +51,7 @@ class DeepfakeDetector:
     def _build_modules(self) -> None:
         cfg = self.cfg
 
+        # Original modules
         self.face_det = FaceDetector(
             confidence_threshold=cfg.detection.face_confidence_threshold,
             target_size=cfg.detection.target_face_size,
@@ -68,7 +80,24 @@ class DeepfakeDetector:
             cnn_model=self.cnn,
             output_dir=cfg.visualizations,
         )
-        logger.info("DeepfakeDetector: all modules ready.")
+        
+        # ENHANCEMENTS
+        self.adaptive_processor = AdaptiveFrameProcessor(
+            blur_threshold=cfg.detection.blur_threshold,
+            duplicate_threshold=cfg.detection.duplicate_threshold,
+            motion_threshold=cfg.detection.motion_threshold,
+            min_frame_interval=cfg.detection.min_frame_interval,
+        ) if cfg.detection.adaptive_frame_processing else None
+        
+        self.temporal_analyzer = TemporalAnalyzer(
+            use_lstm=cfg.temporal.use_lstm
+        ) if cfg.temporal.enabled else None
+        
+        self.forensic_analyzer = ForensicAnalyzer() if cfg.forensic.enabled else None
+        
+        self.robustness = RobustnessAugmentation() if cfg.robustness.enabled else None
+        
+        logger.info("DeepfakeDetector: all modules ready (including enhancements).")
 
     # ── Single video ──────────────────────────────────────────────────────────
 
